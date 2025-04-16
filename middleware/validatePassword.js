@@ -4,7 +4,6 @@ import bcrypt from 'bcryptjs';
 const client = new PrismaClient();
         
 async function validatePassword(req, res, next) {
-    const { userId } = req.params; 
     const { oldpass} = req.body; 
 
     if (!oldpass) {
@@ -12,6 +11,7 @@ async function validatePassword(req, res, next) {
     }
 
     try {
+        const userId = req.user.id;
         const user = await client.user.findFirst({
             where: { id: userId },
         });
@@ -29,7 +29,7 @@ async function validatePassword(req, res, next) {
         req.user = user;
         next();
     } catch (error) {
-        console.error("Password validation error:", error);
+        console.log(error);
         res.status(500).json({ message: "Something went wrong. Please try again later." });
     }
 }
