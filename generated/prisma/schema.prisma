@@ -1,0 +1,46 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(uuid())
+  firstName     String   @map("first_name")
+  lastName      String   @map("last_name")
+  emailAddress  String   @unique @map("email_address")
+  username      String   @unique @map("username")
+  password      String   @map("password")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+  isDeleted     Boolean  @default(false) @map("is_deleted")
+  isDeactivated Boolean  @default(false) @map("is_deactivated")
+  entries       Entry[]
+
+  @@map("users")
+}
+
+model Entry {
+  id          String   @id @default(uuid())
+  title       String   @map("entry_title")
+  description String   @map("entry_description")
+  content     String   @map("entry_content")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  isDeleted   Boolean  @default(false) @map("is_deleted")
+  authorId    String   @map("author_id")
+  isPinned    Boolean  @default(false) @map("is_pinned")
+  author      User     @relation(fields: [authorId], references: [id])
+
+  @@map("entries")
+}
