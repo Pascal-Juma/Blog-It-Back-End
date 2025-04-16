@@ -10,7 +10,7 @@ app.use(cookieParser());
 
 app.use(
   cors({
-    origin: "https://blog-it-website.vercel.app/",
+    origin: "https://blog-it-website.vercel.app",
     methods: ["GET", "POST", "PATCH", "DELETE"],
     credentials: true,
   }),
