@@ -55,7 +55,11 @@ export const signin =  async (req, res) => {
             createdAt: user.createdAt,
         }
         const token = jwt.sign(payload, process.env.JWT_SECRET_KEY);
-        res.status(200).cookie("Token", token).json({ id: user.id,
+        res.status(200).cookie("Token", token,{
+            httpOnly: true,
+            secure: true,
+            sameSite: 'None'
+          }).json({ id: user.id,
             firstName: user.firstName, lastName: user.lastName, createdAt: user.createdAt
         })
     }catch(e){
